@@ -6,9 +6,36 @@ namespace Model1.Models
     public class RestaurantController(MapDbContext db) : ControllerBase
     {
         [HttpGet("system/api/restaurant/list")]
-        public ApiResult List()
+        public ApiResult List(int pageNum = 1,
+            int pageSize = 10
+            ,string?restaurantName = null
+            ,string?restaurantType = null)
         {
-            return ApiResult.Ok();
+            var q = db.Restaurants.AsQueryable(); //ใช้เชื่อมต่อกับตารางRestaurants 
+            if (!string.IsNullOrEmpty(restaurantName))  //ยังไม่ได้กรองชื่อ
+            q = q.Where(x => x.RestaurantName!.Contains(restaurantName)); //เงื่อนไขที่1
+            if (!string.IsNullOrEmpty(restaurantType))
+                q = q.Where(x => x.RestaurantType == restaurantType); //กรองชื่อ
+
+            int total = q.Count();
+            var rows = q.OrderBy(x => x.RestaurantId)
+                .Skip((pageNum - 1) * pageSize)
+                .Take(pageSize)
+                .ToList()
+                .Select(x => new
+                {
+                    x.RestaurantId,
+                    x.RestaurantName,
+                    x.Address,
+                    x.Phone,
+                    rating = x.Rating.ToString(),
+                    x.PriceRange,
+                    x.RestaurantType,
+                    x.ImageUrl,
+                    x.Description,
+                    distance = x.Distance.ToString(),
+                    businessType = "restaurant"});
+            return ApiResult.Ok(new { total, rows});
         }
     }
 }
