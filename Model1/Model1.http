@@ -19,3 +19,20 @@ GET {{Model1_HostAddress}}/weatherforecast
 GET {{Model1_HostAddress}}/system/api/restaurant/list
 
 ###
+
+GET {{Model1_HostAddress}}/system/api/restaurant/list
+
+###
+
+GET {{Model1_HostAddress}}/system/api/restaurant/list
+
+###
+
+GET {{Model1_HostAddress}}/system/api/restaurant/list
+
+###
+
+@restaurantId=0
+GET {{Model1_HostAddress}}/system/api/restaurant/{{restaurantId}}
+
+###
